@@ -1,0 +1,76 @@
+{
+  "name": "js-delegatable",
+  "version": "0.0.0-beta.0",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Dan Finlay"
+    },
+    {
+      "name": "Kames Geraghty"
+    }
+  ],
+  "source": "src/index.ts",
+  "typings": "dist/index.d.ts",
+  "type": "module",
+  "exports": {
+    "require": "./dist/delegatable.cjs",
+    "default": "./dist/delegatable.modern.js"
+  },
+  "main": "./dist/delegatable.cjs",
+  "module": "./dist/delegatable.module.js",
+  "unpkg": "./dist/delegatable.umd.js",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "analyze": "size-limit --why",
+    "build": "microbundle",
+    "lint": "dts lint",
+    "prepare": "husky install ; microbundle",
+    "size": "size-limit",
+    "start": "microbundle watch",
+    "test": "dts test"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "dts lint",
+      "commit-msg": "dts lint"
+    }
+  },
+  "prettier": {
+    "printWidth": 80,
+    "semi": true,
+    "singleQuote": true,
+    "trailingComma": "es5"
+  },
+  "jest": {
+    "testEnvironment": "node"
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "size-limit": [
+    {
+      "path": "dist/js-delegatable.cjs.production.min.js",
+      "limit": "10 KB"
+    },
+    {
+      "path": "dist/js-delegatable.esm.js",
+      "limit": "10 KB"
+    }
+  ],
+  "devDependencies": {
+    "@commitlint/cli": "^17.1.2",
+    "@commitlint/config-conventional": "^17.1.0",
+    "@size-limit/preset-small-lib": "^8.1.0",
+    "@tsconfig/recommended": "^1.0.1",
+    "dts-cli": "^1.6.0",
+    "husky": "^8.0.2",
+    "microbundle": "^0.15.1",
+    "size-limit": "^8.1.0",
+    "tslib": "^2.4.1",
+    "typescript": "^4.9.3"
+  }
+}
