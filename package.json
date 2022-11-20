@@ -81,7 +81,7 @@
     "typescript": "^4.9.3"
   },
   "dependencies": {
-    "@metamask/eth-sig-util": "^4.0.1",
+    "@metamask/eth-sig-util": "^5.0.2",
     "eth-simple-keyring": "^4.2.0",
     "ethereumjs-util": "^7.1.5",
     "ethers": "^5.7.2"
