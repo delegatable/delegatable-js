@@ -1,9 +1,14 @@
 import { TypedDataUtils, SignTypedDataVersion } from '@metamask/eth-sig-util';
+import { createDelegatedInvitation } from './createDelegatedInvitation';
+import { createFirstDelegatedInvitation } from './createFirstDelegatedInvitation';
 import DelegatableTypes from './DelegatableTypes';
+import { signDelegation, signInvocations, signRevocation } from './signing';
+import { createSignedDelegationHash } from './utils/createDelegationHash';
+import { validateInvitation } from './utils/validateInvitation';
 
 export function createMembership(opts: MembershipOpts): Membership {
   let invitation: any, key: string | undefined, contractInfo: any;
-
+  key = undefined;
   if ('invitation' in opts) {
     invitation = opts.invitation;
   }
@@ -30,8 +35,12 @@ export function createMembership(opts: MembershipOpts): Membership {
     }
   }
 
+  if (key === undefined) {
+    throw new Error('Key is undefined');
+  }
+
   if (invitation) {
-    exports.validateInvitation({ invitation, contractInfo });
+    validateInvitation({ invitation, contractInfo });
   }
 
   if (!contractInfo || !contractInfo.verifyingContract) {
@@ -41,7 +50,7 @@ export function createMembership(opts: MembershipOpts): Membership {
   return {
     createInvitation({ recipientAddress, delegation } = {}): Invitation {
       if (!invitation) {
-        return exports.createFirstDelegatedInvitation({
+        return createFirstDelegatedInvitation({
           contractInfo,
           recipientAddress,
           delegation,
@@ -51,22 +60,22 @@ export function createMembership(opts: MembershipOpts): Membership {
 
       // Having an invitation means there may be signedDelegations to chain from:
       if (invitation?.signedDelegations?.length === 0) {
-        const newInvitation = exports.createFirstDelegatedInvitation({
+        const newInvitation = createFirstDelegatedInvitation({
           contractInfo,
           recipientAddress,
           delegation,
           key,
         });
-        exports.validateInvitation({ invitation: newInvitation, contractInfo });
+        validateInvitation({ invitation: newInvitation, contractInfo });
         return newInvitation;
       } else {
-        const newInvitation = exports.createDelegatedInvitation({
+        const newInvitation = createDelegatedInvitation({
           contractInfo,
           invitation,
           delegation,
           key,
         });
-        exports.validateInvitation({ invitation: newInvitation, contractInfo });
+        validateInvitation({ invitation: newInvitation, contractInfo });
         return newInvitation;
       }
     },
@@ -78,7 +87,7 @@ export function createMembership(opts: MembershipOpts): Membership {
           const lastSignedDelegation =
             signedDelegations[signedDelegations.length - 1];
           const delegationHash =
-            exports.createSignedDelegationHash(lastSignedDelegation);
+            createSignedDelegationHash(lastSignedDelegation);
           const hexHash = '0x' + delegationHash.toString('hex');
           delegation.authority = hexHash;
         } else {
@@ -86,21 +95,23 @@ export function createMembership(opts: MembershipOpts): Membership {
             '0x0000000000000000000000000000000000000000000000000000000000000000';
         }
 
-        const newInvitation = exports.createDelegatedInvitation({
+        const newInvitation = createDelegatedInvitation({
           contractInfo,
           recipientAddress: delegation.delegate,
           invitation,
           delegation,
         });
 
+        // @ts-ignore
         if (!newInvitation.key) {
           // We can allow instantiating with a local delegate key later,
           // but for now it seems like a less common use case so I'm not prioritizing it.
+          // - Dan
           throw new Error(
             'Cannot create a membership object without a signing key.'
           );
         }
-        return exports.createMembership({
+        return createMembership({
           invitation: newInvitation,
           contractInfo,
         });
@@ -108,14 +119,14 @@ export function createMembership(opts: MembershipOpts): Membership {
 
       delegation.authority =
         '0x0000000000000000000000000000000000000000000000000000000000000000';
-      const firstInvitation = exports.createFirstDelegatedInvitation({
+      const firstInvitation = createFirstDelegatedInvitation({
         contractInfo,
         recipientAddress: delegation.delegate,
         delegation,
         key,
       });
 
-      return exports.createMembership({
+      return createMembership({
         invitation: firstInvitation,
         contractInfo,
       });
@@ -126,8 +137,7 @@ export function createMembership(opts: MembershipOpts): Membership {
         const { signedDelegations } = invitation;
         const lastSignedDelegation =
           signedDelegations[signedDelegations.length - 1];
-        const delegationHash =
-          exports.createSignedDelegationHash(lastSignedDelegation);
+        const delegationHash = createSignedDelegationHash(lastSignedDelegation);
         const hexHash = '0x' + delegationHash.toString('hex');
         delegation.authority = hexHash;
       } else {
@@ -135,8 +145,11 @@ export function createMembership(opts: MembershipOpts): Membership {
           '0x0000000000000000000000000000000000000000000000000000000000000000';
       }
 
-      // function signDelegation ({ delegation, key, contractInfo }):
-      return exports.signDelegation({ contractInfo, delegation, key });
+      if (key === undefined) {
+        throw new Error('Key is undefined');
+      }
+      
+      return signDelegation({ contractInfo, delegation, privateKey: key });
     },
 
     signInvocations(invocations: Invocations) {
@@ -154,7 +167,11 @@ export function createMembership(opts: MembershipOpts): Membership {
           invocation.authority = [];
         }
       });
-      return exports.signInvocations({
+
+      if (key === undefined) {
+        throw new Error('Key is undefined');
+      }
+      return signInvocations({
         invocations,
         privateKey: key,
         contractInfo,
@@ -174,7 +191,16 @@ export function createMembership(opts: MembershipOpts): Membership {
           SignTypedDataVersion.V4
         ),
       };
-      return exports.signRevocation(intentionToRevoke, key);
+      if (key === undefined) {
+        throw new Error('Key is undefined');
+      }
+      return signRevocation({
+        revocation: {
+          delegationHash: intentionToRevoke.delegationHash.toString(),
+        },
+        privateKey: key,
+        contractInfo,
+      });
     },
   };
 }

@@ -1,3 +1,7 @@
+import { signDelegation } from './signing';
+import { generateAccount } from './utils';
+import { createSignedDelegationHash } from './utils/createDelegationHash';
+
 export function createDelegatedInvitation({
   contractInfo,
   recipientAddress,
@@ -10,7 +14,7 @@ export function createDelegatedInvitation({
   const delegatorKey = key || invitation.key;
 
   const signedDelegation = signedDelegations[signedDelegations.length - 1];
-  const delegationHash = exports.createSignedDelegationHash(signedDelegation);
+  const delegationHash = createSignedDelegationHash(signedDelegation);
   const hexHash = '0x' + delegationHash.toString('hex');
 
   if (delegation && delegation.delegate) {
@@ -19,7 +23,7 @@ export function createDelegatedInvitation({
 
   let delegate: Account;
   if (!recipientAddress) {
-    delegate = exports.generateAccount();
+    delegate = generateAccount();
   } else {
     delegate = {
       address: recipientAddress || delegation.delegate,
@@ -46,8 +50,8 @@ export function createDelegatedInvitation({
     delegation.authority = hexHash;
   }
 
-  const newSignedDelegation = exports.signDelegation({
-    key: delegatorKey,
+  const newSignedDelegation = signDelegation({
+    privateKey: delegatorKey,
     contractInfo,
     delegation,
   });

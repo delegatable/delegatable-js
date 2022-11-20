@@ -1,3 +1,6 @@
+import { signDelegation } from "./signing";
+import { generateAccount } from "./utils";
+
 export function createFirstDelegatedInvitation({
   contractInfo,
   recipientAddress,
@@ -8,7 +11,7 @@ export function createFirstDelegatedInvitation({
 
   let delegate: Account;
   if (!recipientAddress) {
-    delegate = exports.generateAccount();
+    delegate = generateAccount();
     recipientAddress = delegate.address;
   } else {
     delegate = {
@@ -38,9 +41,9 @@ export function createFirstDelegatedInvitation({
     }
   }
 
-  const newSignedDelegation = exports.signDelegation({
+  const newSignedDelegation = signDelegation({
     delegation,
-    key,
+    privateKey: key,
     contractInfo,
   });
   const newInvite: Invitation = {

@@ -24,6 +24,9 @@
     "dist",
     "src"
   ],
+  "bin": {
+    "dts": "./node_modules/bin/dts"
+  },
   "scripts": {
     "analyze": "size-limit --why",
     "build": "microbundle",
@@ -68,7 +71,6 @@
     "@commitlint/config-conventional": "^17.1.0",
     "@size-limit/preset-small-lib": "^8.1.0",
     "@tsconfig/recommended": "^1.0.1",
-    "@types/typedarray-to-buffer": "^4.0.0",
     "dts-cli": "^1.6.0",
     "husky": "^8.0.2",
     "microbundle": "^0.15.1",
@@ -82,7 +84,6 @@
     "@metamask/eth-sig-util": "^4.0.1",
     "eth-simple-keyring": "^4.2.0",
     "ethereumjs-util": "^7.1.5",
-    "ethers": "^5.7.2",
-    "typedarray-to-buffer": "^4.0.0"
+    "ethers": "^5.7.2"
   }
 }

@@ -1,5 +1,5 @@
 import { signTypedData, SignTypedDataVersion } from '@metamask/eth-sig-util';
-import typedArrayToBuffer from 'typedarray-to-buffer';
+import { toBuffer } from 'ethereumjs-util';
 import { createTypedMessage } from '../utils/createTypedMessage';
 import { fromHexString } from '../utils/fromHexString';
 
@@ -20,9 +20,8 @@ export function signDelegation({
     name,
     chainId
   );
-
   const signature = signTypedData({
-    privateKey: typedArrayToBuffer(
+    privateKey: toBuffer(
       fromHexString(
         privateKey.indexOf('0x') === 0 ? privateKey.substring(2) : privateKey
       )

@@ -10,7 +10,7 @@ export function createTypedMessage(
 ): any {
   return {
     data: {
-      types: DelegatableTypes,
+      types: DelegatableTypes.types,
       primaryType,
       domain: {
         name: contractName,

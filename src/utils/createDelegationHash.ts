@@ -9,3 +9,5 @@ export function createDelegationHash(signedDelegation: any) {
     SignTypedDataVersion.V4
   );
 }
+
+export const createSignedDelegationHash = createDelegationHash;
