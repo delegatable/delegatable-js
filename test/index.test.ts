@@ -1,7 +1,7 @@
-import { sum } from '../src/index';
+import { generateAccount } from '../src/utils/generateAccount';
 
-describe('sum', () => {
-  it('adds two numbers together', () => {
-    expect(sum(1, 1)).toEqual(2);
+describe('generateAccount', () => {
+  it('Generate Account using Random Generation', () => {
+    expect(generateAccount().address).toBeTruthy();
   });
 });
