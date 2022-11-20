@@ -42,9 +42,11 @@ export function createInvitation(opts: {
     chainId
   );
   const signature = signTypedData({
-    privateKey: toBuffer(fromHexString(
-      privateKey.indexOf('0x') === 0 ? privateKey.substring(2) : privateKey
-    )),
+    privateKey: toBuffer(
+      fromHexString(
+        privateKey.indexOf('0x') === 0 ? privateKey.substring(2) : privateKey
+      )
+    ),
     data: typedMessage.data,
     version: SignTypedDataVersion.V4,
   });

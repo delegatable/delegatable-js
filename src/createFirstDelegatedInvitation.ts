@@ -1,5 +1,5 @@
-import { signDelegation } from "./signing";
-import { generateAccount } from "./utils";
+import { signDelegation } from './signing';
+import { generateAccount } from './utils';
 
 export function createFirstDelegatedInvitation({
   contractInfo,

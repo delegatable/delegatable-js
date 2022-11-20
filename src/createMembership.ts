@@ -148,7 +148,7 @@ export function createMembership(opts: MembershipOpts): Membership {
       if (key === undefined) {
         throw new Error('Key is undefined');
       }
-      
+
       return signDelegation({ contractInfo, delegation, privateKey: key });
     },
 
