@@ -6,7 +6,15 @@
 [![Version](https://img.shields.io/npm/v/@delegatable/js-delegatable.svg)](https://npmjs.org/package/@delegatable/js-delegatable)
 [![Downloads/week](https://img.shields.io/npm/dw/@delegatable/js-delegatable.svg)](https://npmjs.org/package/@delegatable/js-delegatable)
 
-The `@delegatable/js-delegatable` [node module](https://www.npmjs.com/package/@delegatable/js-delegatable) is a Javascript/Typescript library to interact with Delegatable smart contract framework.
+The `@delegatable/js-delegatable` [node module](https://www.npmjs.com/package/@delegatable/js-delegatable) is a Javascript library for the Delegatable framework.
+
+## 📚 [API Documentation](https://delegatable.github.io/js-delegatable/)
+
+The `js-delegatable` module is written in Typescript. Documentation is automatically generated in the Github workflow actions.
+
+[View the Documentation](https://delegatable.github.io/js-delegatable/)
+
+Want to contribute? **Create a pull request and message a contributor.**
 
 ### 💾 Installation
 
